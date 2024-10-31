@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"marketplace-api-client/internal/api"    // Adjust the import path according to your project structure
-	"marketplace-api-client/internal/client" // Adjust the import path according to your project structure
-	"marketplace-api-client/internal/config" // Adjust the import path according to your project structure
+	"simple-ozohub-prjct/internal/api"    // Adjust the import path according to your project structure
+	"simple-ozohub-prjct/internal/client" // Adjust the import path according to your project structure
+	"simple-ozohub-prjct/internal/config" // Adjust the import path according to your project structure
 
 	"github.com/gorilla/mux" // Import Gorilla Mux for routing
 )
