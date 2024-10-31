@@ -22,6 +22,7 @@ func FetchProduct(productID int64) (*ozon.GetProductDetailsResponse, error) {
 	resp, err := apiClient.Products().GetProductDetails(ctx, &ozon.GetProductDetailsParams{
 		ProductId: productID,
 	})
+
 	if err != nil || resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("error when getting product details: %s", err)
 	}
