@@ -24,6 +24,7 @@ func main() {
 	// Set up the router
 	r := mux.NewRouter()
 	r.HandleFunc("/products/{product_id}", api.GetProductHandler).Methods("GET")
+	r.HandleFunc("/products/list/", api.GetListOfProductsHandler).Methods("GET")
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", r)) // Listen on port 8080
