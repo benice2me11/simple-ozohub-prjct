@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -28,4 +29,10 @@ func main() {
 
 	// Start the server
 	log.Fatal(http.ListenAndServe(":8080", r)) // Listen on port 8080
+
+	if err := config.InitDB(); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	fmt.Println("Connected to database successfully.")
+	// остальная инициализация сервиса
 }

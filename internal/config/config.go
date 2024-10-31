@@ -1,10 +1,8 @@
 package config
 
 import (
-	"log"
+	"errors"
 	"os"
-
-	"github.com/joho/godotenv" // Import godotenv for loading env variables
 )
 
 // Config holds the application configuration
@@ -15,15 +13,11 @@ type Config struct {
 
 // LoadConfig loads configuration from environment variables
 func LoadConfig() (*Config, error) {
-	if err := godotenv.Load(); err != nil {
-		return nil, err
-	}
-
 	apiKey := os.Getenv("API_KEY")
 	clientID := os.Getenv("CLIENT_ID")
 
 	if apiKey == "" || clientID == "" {
-		return nil, log.Output(2, "API_KEY and CLIENT_ID must be set")
+		return nil, errors.New("API_KEY and CLIENT_ID must be set")
 	}
 
 	return &Config{
