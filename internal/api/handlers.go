@@ -61,10 +61,27 @@ func GetProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Получаем данные продукта из API
 	product, err := FetchProductFunc(productID)
 	if err != nil {
 		sendErrorResponse(w, http.StatusInternalServerError, "Error retrieving product details", err.Error())
 		return
+	}
+
+	// Сохраняем продукт в базе данных
+	err = SaveProductDetails(
+		product.Result.Id,
+		product.Result.OfferId,
+		product.Result.Name,
+		product.Result.Price,
+		product.Result.OldPrice,
+		product.Result.CurrencyCode,
+		product.Result.PrimaryImage,
+		product.Result.SKU,
+		product.Result.UpdatedAt,
+	)
+	if err != nil {
+		log.Printf("Failed to save product to database: %v", err)
 	}
 
 	w.WriteHeader(http.StatusOK)
