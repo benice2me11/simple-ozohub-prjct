@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"simple-ozohub-prjct/internal/client"
-	"simple-ozohub-prjct/internal/config"
 
 	"github.com/diphantxm/ozon-api-client/ozon"
 )
@@ -47,7 +46,7 @@ func GetListOfProductsHandler(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := apiClient.Products().GetListOfProducts(ctx, params)
 	if err != nil {
-		log.Printf("Error fetching product list: %v\n", err)
+		log.Println("Error fetching product list:", err)
 		http.Error(w, "Error fetching product list", http.StatusInternalServerError)
 		return
 	}
@@ -55,11 +54,15 @@ func GetListOfProductsHandler(w http.ResponseWriter, r *http.Request) {
 	PrintProductsInfo(resp)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(resp)
-}
 
-func SaveProduct(productID int64, offerID, lastID, serviceSource string) error {
-	_, err := config.DB.Exec(`INSERT INTO products (product_id, offer_id, last_id, service_source) VALUES ($1, $2, $3, $4)
-                          ON CONFLICT (product_id) DO UPDATE SET last_id = EXCLUDED.last_id`,
-		productID, offerID, lastID, serviceSource)
-	return err
+	// Сохранение каждого продукта в базе данных
+	for _, product := range resp.Result.Items {
+		err := SaveProductList(product.ProductId, product.OfferId, resp.Result.LastId, "GetListOfProducts")
+		if err != nil {
+			log.Printf("Error saving product %d to database: %v\n", product.ProductId, err)
+		}
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
 }
